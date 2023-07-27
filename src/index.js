@@ -7,6 +7,8 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+//este index.js es el servidor
+
 app.use(express.static(path.join(__dirname, "views")));
 
 app.get("/", (req, res)=>{
@@ -15,17 +17,15 @@ app.get("/", (req, res)=>{
 
 io.on("connection", socket => {
 
-    // console.log("Clientes consectados: ", io.engine.clientsCount)
-    // console.log("ID del socket conectado: ", socket.id);
+    //EMISION BASICA
+    socket.emit("welcome", "Ahora estás conectado.");
 
-    // socket.on("disconnect", () => {
-    //     console.log("El socket " + socket.id + "se ha desconectado.");
-    // });
+    socket.on("server", data => {
+        console.log(data);
+    });
 
-    socket.conn.once("upgrade", () => {
-        console.log("hemos pasado de HTTP Long-poling a", socket.conn.transport.name);
-    })
-
+    //emisión a todos
+    io.emit("everyone", socket.id + "se ha conectado");
 
 });
 
