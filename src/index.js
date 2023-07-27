@@ -18,8 +18,12 @@ io.on("connection", socket => {
     // console.log("Clientes consectados: ", io.engine.clientsCount)
     // console.log("ID del socket conectado: ", socket.id);
 
-    socket.on("disconnect", () => {
-        console.log("El socket " + socket.id + "se ha desconectado.")
+    // socket.on("disconnect", () => {
+    //     console.log("El socket " + socket.id + "se ha desconectado.");
+    // });
+
+    socket.conn.once("upgrade", () => {
+        console.log("hemos pasado de HTTP Long-poling a", socket.conn.transport.name);
     })
 
 
