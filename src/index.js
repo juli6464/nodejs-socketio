@@ -13,11 +13,30 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/views/index.html");
 });
 
+//middleware para determinar si esta autenticado o no
+io.use( (socket, next) => {
+
+    const token = socket.handshake.auth.token;
+
+    if (token =="Gato") {
+        next();
+    }
+    else {
+        const err = new Error("no puedes pasar");
+        err.data = {
+            details: "no pudiste ser autenticado"
+        }
+
+        next(err);
+    }
+
+});
+
+
+
 io.on("connection", socket => {
 
-    socket.on("circle position", position => {
-        socket.broadcast.emit("move circle", position);
-    });
+    console.log(socket.id)
 
 });
 

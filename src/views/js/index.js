@@ -1,33 +1,14 @@
-const socket = io();
-
-const circle = document.querySelector("#circle");
-
-const drawCircle = position => {
-    circle.style.top = position.top;
-    circle.style.left = position.left;
-}
-
-const drag = e => {
-
-    const position =  {
-        top: e.clientY + "px",
-        left: e.clientX + "px"
-    };
-
-    drawCircle(position);
-    console.log("Se envia el evento al servidor");
-    socket.volatile.emit("circle position", position);
-
-}
-
-document.addEventListener("mousedown", e => {
-    document.addEventListener("mousemove", drag)
+const socket = io({
+    auth: {
+        token: "Gato"
+    }
 });
 
-document.addEventListener("mouseup", e => {
-    document.removeEventListener("mousemove", drag);
-});
+// en caso de error el middleware
+socket.on("connect_error", err => {
 
-socket.on("move circle", position => {
-    drawCircle(position);
+    console.log("error de conexión");
+    console.log(err.message);
+    console.log(err.data.details);
+
 });
