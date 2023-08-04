@@ -33,5 +33,37 @@ describe("Testing Socket.io", () => {
         clientSocket.close();
     });
     
+    test("test event", done => {
+
+        clientSocket.on("greeting", greet => {
+            try {
+                expect(greet).toBe("hola");
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+        
+        serverSocket.emit("greeting", "hola");
+
+    });
+
+    test("testing callbacks (acknoledgements)", done => {
+
+        serverSocket.on("bark", callback => {
+            callback("woof!");
+        });
+
+        clientSocket.emit("bark", arg => {
+            try {
+                expect(arg).toBe("woof!")
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+
+    });
+
 });
 
