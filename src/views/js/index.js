@@ -1,44 +1,20 @@
 //cliente (frontend)
-const user = prompt("Escribe tu usuario");
+const socket = io();
 
-const profes = ["juli6464", "julian", "JDAC"];
+const send = document.querySelector("#send");
+const disconnect = document.querySelector("#disconnect");
+const reconnect = document.querySelector("#reconnect");
 
-let socketNamespace, group;
+send.addEventListener("click", () => {
 
-const chat = document.querySelector("#chat");
-const namespace = document.querySelector("#namespace");
-
-if (profes.includes(user)) {
-    socketNamespace = io("/teachers");
-    group = "teachers";
-}
-else {
-    socketNamespace = io("/students");
-    group = "students";
-}
-
-socketNamespace.on("connect", () => {
-    namespace.textContent = group;
+    if(socket.connected)
+        socket.emit("is connected", "está conectado");
 });
 
-//programando la lógica de envío de mesajes
-
-const sendMessage = document.querySelector("#sendMessage");
-sendMessage.addEventListener("click", () => {
-
-    const message = prompt("Escribe tu mensaje: ");
-
-    socketNamespace.emit("send message", {
-       message, user 
-    });
+disconnect.addEventListener("click", () => {
+    socket.disconnect();
 });
 
-socketNamespace.on("message", messageData => {
-
-    const { user, message } = messageData;
-
-    const li = document.createElement("li");
-    li.textContent = `${user}: ${message}`;
-
-    chat.append(li);
+reconnect.addEventListener("click", () => {
+    socket.connect();
 });
